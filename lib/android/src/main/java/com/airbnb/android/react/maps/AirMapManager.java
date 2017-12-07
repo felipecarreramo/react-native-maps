@@ -236,7 +236,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     Double latDelta;
     float bearing;
     float angle;
-    Double altitude;
+    float altitude;
     Double offsetMeters;
     ReadableMap region;
 
