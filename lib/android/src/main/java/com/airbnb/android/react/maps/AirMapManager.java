@@ -296,7 +296,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         altitude = (float)args.getDouble(1);
         lng = region.getDouble("longitude");
         lat = region.getDouble("latitude");
-        LatLng coordinates = new LatLng(lat, lng );
+        LatLng coordinates = new LatLng(lat, lng);
         bearing = (float)args.getDouble(2);
         angle = (float)args.getDouble(3);
         offsetMeters = args.getDouble(4);
@@ -339,9 +339,13 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         "animateToBearing", ANIMATE_TO_BEARING,
         "fitToElements", FIT_TO_ELEMENTS,
         "fitToSuppliedMarkers", FIT_TO_SUPPLIED_MARKERS,
-        "fitToCoordinates", FIT_TO_COORDINATES,
-        "animateToView", ANIMATE_TO_VIEW
+        "fitToCoordinates", FIT_TO_COORDINATES
     );
+
+    map.putAll(MapBuilder.of(
+      "animateToView", ANIMATE_TO_VIEW
+    ));
+
 
     map.putAll(MapBuilder.of(
       "setMapBoundaries", SET_MAP_BOUNDARIES
