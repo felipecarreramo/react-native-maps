@@ -298,7 +298,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         lat = region.getDouble("latitude");
         lngDelta = region.getDouble("longitudeDelta");
         latDelta = region.getDouble("latitudeDelta");
-        LatLngBounds bounds = new LatLngBounds(
+        LatLngBounds bounds2 = new LatLngBounds(
             new LatLng(lat - latDelta / 2, lng - lngDelta / 2), // southwest
             new LatLng(lat + latDelta / 2, lng + lngDelta / 2)  // northeast
         );
@@ -306,7 +306,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         angle = (float)args.getDouble(3);
         offsetMeters = args.getDouble(4);
         duration = args.getInt(5);
-        view.animateToView(bounds, altitude, bearing, angle, offsetMeters, duration);
+        view.animateToView(bounds2, altitude, bearing, angle, offsetMeters, duration);
         break;
     }
   }
