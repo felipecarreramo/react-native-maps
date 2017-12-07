@@ -35,6 +35,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
   private static final int FIT_TO_SUPPLIED_MARKERS = 6;
   private static final int FIT_TO_COORDINATES = 7;
   private static final int SET_MAP_BOUNDARIES = 8;
+  private static final int ANIMATE_TO_VIEW = 9;
 
 
   private final Map<String, Integer> MAP_TYPES = MapBuilder.of(
@@ -235,6 +236,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     Double latDelta;
     float bearing;
     float angle;
+    Double altitude;
+    Double offsetMeters;
     ReadableMap region;
 
     switch (commandId) {
@@ -287,6 +290,24 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
       case SET_MAP_BOUNDARIES:
         view.setMapBoundaries(args.getMap(0), args.getMap(1));
         break;
+
+      case ANIMATE_TO_VIEW:
+        region = args.getMap(0);
+        altitude = args.getDouble(1)
+        lng = region.getDouble("longitude");
+        lat = region.getDouble("latitude");
+        lngDelta = region.getDouble("longitudeDelta");
+        latDelta = region.getDouble("latitudeDelta");
+        LatLngBounds bounds = new LatLngBounds(
+            new LatLng(lat - latDelta / 2, lng - lngDelta / 2), // southwest
+            new LatLng(lat + latDelta / 2, lng + lngDelta / 2)  // northeast
+        );
+        bearing = (float)args.getDouble(2);
+        angle = (float)args.getDouble(3);
+        offsetMeters = args.getDouble(4);
+        duration = args.getInt(5);
+        view.animateToView(bounds, altitude, bearing, angle, offsetMeters, duration);
+        break;
     }
   }
 
@@ -312,7 +333,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
 
     return map;
   }
-  
+
   @Nullable
   @Override
   public Map<String, Integer> getCommandsMap() {
@@ -323,7 +344,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         "animateToBearing", ANIMATE_TO_BEARING,
         "fitToElements", FIT_TO_ELEMENTS,
         "fitToSuppliedMarkers", FIT_TO_SUPPLIED_MARKERS,
-        "fitToCoordinates", FIT_TO_COORDINATES
+        "fitToCoordinates", FIT_TO_COORDINATES,
+        "animateToView", ANIMATE_TO_VIEW
     );
 
     map.putAll(MapBuilder.of(
