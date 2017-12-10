@@ -221,17 +221,10 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
             RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
         } else {
 
-            AIRMap *mapView = (AIRMap *)view;
-            MKMapCamera *mapCamera = [[mapView camera] copy];
+            AIRMap *mapView = (AIRMap *)view;;
 
-            CLLocationCoordinate2D coordinateAhead = [self coordinateFromCoord: latlng atDistanceKm:offsetMeters/1000 atBearingDegrees: bearing];
-
-            [mapCamera setCenterCoordinate: coordinateAhead];
-            //[mapCamera setCenterCoordinate: latlng];
-            [mapCamera setHeading:bearing];
-            [mapCamera setAltitude: altitudeMeters];
+            MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate:latlng fromEyeCoordinate:[self coordinateFromCoord:latlng atDistanceKm:0.001 atBearingDegrees: bearing] eyeAltitude: altitudeMeters];
             [mapCamera setPitch: angle];
-
 
             [AIRMap animateWithDuration:duration/1000 animations:^{
                 [mapView setCamera:mapCamera animated:YES];
@@ -242,20 +235,9 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
 
 // Helper functions to allow vertical offsetting the current position:
-- (double)radiansFromDegrees:(double)degrees
-{
-    return degrees * (M_PI/180.0);
-}
-
-- (double)degreesFromRadians:(double)radians
-{
-    return radians * (180.0/M_PI);
-}
-
-- (CLLocationCoordinate2D)coordinateFromCoord:
-(CLLocationCoordinate2D)fromCoord
-atDistanceKm:(double)distanceKm
-atBearingDegrees:(double)bearingDegrees
+- (CLLocationCoordinate2D)coordinateFromCoord:(CLLocationCoordinate2D)fromCoord
+                                 atDistanceKm:(double)distanceKm
+                             atBearingDegrees:(double)bearingDegrees
 {
     double distanceRadians = distanceKm / 6371.0;
     //6,371 = Earth's radius in km
@@ -263,7 +245,7 @@ atBearingDegrees:(double)bearingDegrees
     double fromLatRadians = [self radiansFromDegrees:fromCoord.latitude];
     double fromLonRadians = [self radiansFromDegrees:fromCoord.longitude];
 
-    double toLatRadians = asin( sin(fromLatRadians) * cos(distanceRadians)
+    double toLatRadians = asin(sin(fromLatRadians) * cos(distanceRadians)
                                + cos(fromLatRadians) * sin(distanceRadians) * cos(bearingRadians) );
 
     double toLonRadians = fromLonRadians + atan2(sin(bearingRadians)
@@ -276,7 +258,18 @@ atBearingDegrees:(double)bearingDegrees
     CLLocationCoordinate2D result;
     result.latitude = [self degreesFromRadians:toLatRadians];
     result.longitude = [self degreesFromRadians:toLonRadians];
+
     return result;
+}
+
+- (double)radiansFromDegrees:(double)degrees
+{
+    return degrees * (M_PI/180.0);
+}
+
+- (double)degreesFromRadians:(double)radians
+{
+    return radians * (180.0/M_PI);
 }
 
 RCT_EXPORT_METHOD(fitToElements:(nonnull NSNumber *)reactTag
