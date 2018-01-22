@@ -212,7 +212,6 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
                   withAltitude:(double)altitudeMeters
                   withBearing:(CGFloat)bearing
                   withAngle:(double)angle
-                  withVerticalOffset:(double)offsetMeters
                   withDuration:(CGFloat)duration)
 {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
