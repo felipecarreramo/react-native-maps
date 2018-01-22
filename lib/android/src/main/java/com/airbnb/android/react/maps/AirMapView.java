@@ -592,7 +592,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     map.animateCamera(CameraUpdateFactory.newLatLng(coordinate), duration, null);
   }
 
-  public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, Double offsetMeters, int duration) {
+  public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
     CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
         .target(coordinates)
@@ -600,6 +600,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         .bearing(bearing)
         .zoom(altitude)
         .build();
+    map.setPadding(0,320,0,0)
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
   }
 

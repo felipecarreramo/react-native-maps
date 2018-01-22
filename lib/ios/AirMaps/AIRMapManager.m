@@ -221,14 +221,15 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
             RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
         } else {
 
-            AIRMap *mapView = (AIRMap *)view;;
+          AIRMap *mapView = (AIRMap *)view;
 
-            MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate:latlng fromEyeCoordinate:[self coordinateFromCoord:latlng atDistanceKm:0.001 atBearingDegrees: bearing] eyeAltitude: altitudeMeters];
-            [mapCamera setPitch: angle];
+          MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate: latlng
+                                                              fromEyeCoordinate: [self coordinateFromCoord:latlng atDistanceKm:0.15 atBearingDegrees: bearing] eyeAltitude: altitudeMeters];
+          [mapCamera setPitch: angle];
 
-            [AIRMap animateWithDuration:duration/1000 animations:^{
-                [mapView setCamera:mapCamera animated:YES];
-            }];
+          [AIRMap animateWithDuration: duration / 1000 animations:^{
+              [mapView setCamera:mapCamera animated:YES];
+          }];
         }
     }];
 }
