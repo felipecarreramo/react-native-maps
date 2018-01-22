@@ -600,7 +600,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         .bearing(bearing)
         .zoom(altitude)
         .build();
-    map.setPadding(0,320,0,0)
+    map.setPadding(0,320,0,0);
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
   }
 
