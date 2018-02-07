@@ -299,9 +299,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         LatLng coordinates = new LatLng(lat, lng);
         bearing = (float)args.getDouble(2);
         angle = (float)args.getDouble(3);
-        offsetMeters = args.getDouble(4);
-        duration = args.getInt(5);
-        view.animateToView(coordinates, altitude, bearing, angle, offsetMeters, duration);
+        duration = args.getInt(4);
+        view.animateToView(coordinates, altitude, bearing, angle, duration);
         break;
     }
   }
