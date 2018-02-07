@@ -605,18 +605,6 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
   }
 
-  public void followCoordinate(LatLng coordinates, float bearing, float angle, int duration) {
-    if (map == null) return;
-    CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
-        .target(coordinates)
-        .tilt(angle)
-        .bearing(bearing)
-        .build();
-
-    map.setPadding(0, this.getHeight() / 2, 0, 0);
-    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
-  }
-
   public void fitToElements(boolean animated) {
     if (map == null) return;
 
