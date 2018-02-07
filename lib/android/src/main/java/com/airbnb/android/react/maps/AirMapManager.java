@@ -297,22 +297,22 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         altitude = (float)args.getDouble(1);
         lng = region.getDouble("longitude");
         lat = region.getDouble("latitude");
-        LatLng coordinates = new LatLng(lat, lng);
+        LatLng coordinateView = new LatLng(lat, lng);
         bearing = (float)args.getDouble(2);
         angle = (float)args.getDouble(3);
         duration = args.getInt(4);
-        view.animateToView(coordinates, altitude, bearing, angle, duration);
+        view.animateToView(coordinateView, altitude, bearing, angle, duration);
         break;
 
       case FOLLOW_COORDINATE:
         region = args.getMap(0);
         lng = region.getDouble("longitude");
         lat = region.getDouble("latitude");
-        LatLng coordinates = new LatLng(lat, lng);
+        LatLng followCoordinate = new LatLng(lat, lng);
         bearing = (float)args.getDouble(1);
         angle = (float)args.getDouble(2);
         duration = args.getInt(3);
-        view.followCoordinate(coordinates, bearing, angle, duration);
+        view.followCoordinate(followCoordinate, bearing, angle, duration);
         break;
     }
   }
