@@ -36,6 +36,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
   private static final int FIT_TO_COORDINATES = 7;
   private static final int SET_MAP_BOUNDARIES = 8;
   private static final int ANIMATE_TO_VIEW = 9;
+  private static final int FOLLOW_COORDINATE = 10;
 
 
   private final Map<String, Integer> MAP_TYPES = MapBuilder.of(
@@ -302,6 +303,17 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         duration = args.getInt(4);
         view.animateToView(coordinates, altitude, bearing, angle, duration);
         break;
+
+      case FOLLOW_COORDINATE:
+        region = args.getMap(0);
+        lng = region.getDouble("longitude");
+        lat = region.getDouble("latitude");
+        LatLng coordinates = new LatLng(lat, lng);
+        bearing = (float)args.getDouble(1);
+        angle = (float)args.getDouble(2);
+        duration = args.getInt(3);
+        view.followCoordinate(coordinates, bearing, angle, duration);
+        break;
     }
   }
 
@@ -343,6 +355,10 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
 
     map.putAll(MapBuilder.of(
       "animateToView", ANIMATE_TO_VIEW
+    ));
+
+    map.putAll(MapBuilder.of(
+      "followCoordinate", FOLLOW_COORDINATE
     ));
 
 
