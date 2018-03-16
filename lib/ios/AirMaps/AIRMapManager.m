@@ -222,8 +222,11 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
           AIRMap *mapView = (AIRMap *)view;
 
-          MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate: latlng
-                                                              fromEyeCoordinate: [self coordinateFromCoord:latlng atDistanceKm:0.15 atBearingDegrees: bearing] eyeAltitude: altitudeMeters];
+          CLLocationCoordinate2D ground = CLLocationCoordinate2DMake(latlng.latitude, latlng.longitude);
+          CLLocationCoordinate2D eye = CLLocationCoordinate2DMake(latlng.latitude, latlng.longitude+.020);
+          MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate:ground
+                                                          fromEyeCoordinate:eye
+                                                                eyeAltitude:altitudeMeters];
           [mapCamera setPitch: angle];
 
           [AIRMap animateWithDuration: duration / 1000 animations:^{
