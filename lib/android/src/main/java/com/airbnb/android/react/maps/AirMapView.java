@@ -595,15 +595,13 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
 
-    Point pointInScreen = map.getProjection().toScreenLocation(coordinates);
-
-    Point newPoint = new Point();
-    newPoint.y = pointInScreen.y + this.getHeight() - 20;
-
-    LatLng newCenterLatLng = map.getProjection().fromScreenLocation(newPoint);
+    Projection projection = map.getProjection();
+    Point markerPoint = projection.toScreenLocation(coordinates);
+    Point targetPoint = new Point(markerPoint.x, markerPoint.y - this.getHeight() / 2);
+    LatLng targetPosition = projection.fromScreenLocation(targetPoint);
 
     CameraPosition cameraPosition = new CameraPosition.Builder()
-      .target(newCenterLatLng)
+      .target(targetPosition)
       .zoom(altitude)
       .bearing(bearing)
       .tilt(angle)
