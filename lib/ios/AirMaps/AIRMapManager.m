@@ -226,14 +226,13 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
                                             centerCoordinate: latlng
                                             andZoomLevel: altitudeMeters];
 
-          [CATransaction begin];
-          [CATransaction setAnimationDuration:duration/1000];
-          AIRGoogleMap *mapView = (AIRGoogleMap *)view;
-          GMSCameraPosition *camera = [AIRGoogleMap makeGMSCameraPositionFromMap:mapView andMKCoordinateRegion:region];
-          [mapView animateToCameraPosition:camera];
-          [mapView animateToViewingAngle:angle];
-          [mapView animateToBearing:bearing];
-          [CATransaction commit];
+          MKMapCamera *mapCamera = [[mapView camera] copy];
+          [mapCamera setPitch:angle];
+          [mapCamera setHeading:bearing];
+          [AIRMap animateWithDuration:duration/1000 animations:^{
+          [(AIRMap *)view setRegion:region animated:YES];
+            [mapView setCamera:mapCamera animated:YES];
+          }];
         }
     }];
 }
