@@ -595,7 +595,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
 
-    double latOffset = (double)100 / 111111; // offset (in meters) to latitude
+    double latOffset = (double)1 / 111111; // offset (in meters) to latitude
     double lngOffset =  Math.cos(Math.toRadians(coordinates.latitude)); // offset (in meters) to longitude
     float bearingFix;
     if ( bearing >= 0 ) { bearingFix = bearing + 90; } else { bearingFix = bearing - 90; } // equalize bearing degrees measure circle with sin / cos degrees measure circle
