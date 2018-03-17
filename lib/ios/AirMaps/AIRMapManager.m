@@ -222,16 +222,18 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
           AIRMap *mapView = (AIRMap *)view;
 
-          CLLocationCoordinate2D ground = CLLocationCoordinate2DMake(latlng.latitude, latlng.longitude);
-          CLLocationCoordinate2D eye = CLLocationCoordinate2DMake(latlng.latitude, latlng.longitude+.020);
-          MKMapCamera *mapCamera = [MKMapCamera cameraLookingAtCenterCoordinate:ground
-                                                          fromEyeCoordinate:eye
-                                                                eyeAltitude:altitudeMeters];
-          [mapCamera setPitch: angle];
+          MKCoordinateRegion region = [self coordinateRegionWithMapView: mapView
+                                            centerCoordinate: latlng
+                                            andZoomLevel: altitudeMeters];
 
-          [AIRMap animateWithDuration: duration / 1000 animations:^{
-              [mapView setCamera:mapCamera animated:YES];
-          }];
+          [CATransaction begin];
+          [CATransaction setAnimationDuration:duration/1000];
+          AIRGoogleMap *mapView = (AIRGoogleMap *)view;
+          GMSCameraPosition *camera = [AIRGoogleMap makeGMSCameraPositionFromMap:mapView andMKCoordinateRegion:region];
+          [mapView animateToCameraPosition:camera];
+          [mapView animateToViewingAngle:angle];
+          [mapView animateToBearing:bearing];
+          [CATransaction commit];
         }
     }];
 }
