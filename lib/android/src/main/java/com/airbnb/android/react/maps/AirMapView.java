@@ -599,8 +599,8 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     double lngOffset =  Math.cos(Math.toRadians(coordinates.latitude)); // offset (in meters) to longitude
     float bearingFix;
     if ( bearing >= 0 ) { bearingFix = bearing + 90; } else { bearingFix = bearing - 90; } // equalize bearing degrees measure circle with sin / cos degrees measure circle
-    double latWithOffset = location.latitude + Math.sin(Math.toRadians(bearingFix)) * latOffset; // calc new latitude with offset based on bearing
-    double lngWithOffset = location.longitude + Math.cos(Math.toRadians(bearingFix)) * lngOffset; // calc new longitude with offset based on bearing
+    double latWithOffset = coordinates.latitude + Math.sin(Math.toRadians(bearingFix)) * latOffset; // calc new latitude with offset based on bearing
+    double lngWithOffset = coordinates.longitude + Math.cos(Math.toRadians(bearingFix)) * lngOffset; // calc new longitude with offset based on bearing
     LatLng newLocation = new LatLng(latWithOffset, lngWithOffset); // create new LatLng object
     CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
         .bearing(bearing)
