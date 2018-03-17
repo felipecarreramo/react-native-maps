@@ -595,20 +595,14 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
 
-    double latOffset = (double)1 / 111111; // offset (in meters) to latitude
-    double lngOffset =  Math.cos(Math.toRadians(coordinates.latitude)); // offset (in meters) to longitude
-    float bearingFix;
-    if ( bearing >= 0 ) { bearingFix = bearing + 90; } else { bearingFix = bearing - 90; } // equalize bearing degrees measure circle with sin / cos degrees measure circle
-    double latWithOffset = coordinates.latitude + Math.sin(Math.toRadians(bearingFix)) * latOffset; // calc new latitude with offset based on bearing
-    double lngWithOffset = coordinates.longitude + Math.cos(Math.toRadians(bearingFix)) * lngOffset; // calc new longitude with offset based on bearing
-    LatLng newLocation = new LatLng(latWithOffset, lngWithOffset); // create new LatLng object
-    CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
-        .bearing(bearing)
-        .zoom(altitude)
-        .tilt(angle)
-        .target(newLocation)
-        .build();
-    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
+    CameraPosition cameraPos = new CameraPosition.Builder()
+      .target(coordinates)
+      .zoom(altitude)
+      .bearing(bearing)
+      .tilt(angle)
+      .build();
+
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos), null);
   }
 
   public void fitToElements(boolean animated) {
