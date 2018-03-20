@@ -28,6 +28,8 @@
 
 #import <MapKit/MapKit.h>
 
+#define DEGREES_TO_RADIANS(degrees)((M_PI * degrees)/180)
+
 static NSString *const RCTMapViewKey = @"MapView";
 
 
@@ -220,19 +222,27 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
             RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
         } else {
 
-          AIRMap *mapView = (AIRMap *)view;
+            AIRMap *mapView = (AIRMap *)view;
 
-          MKCoordinateRegion region = [self coordinateRegionWithMapView: mapView
-                                            centerCoordinate: latlng
-                                            andZoomLevel: altitudeMeters];
+            MKMapCamera *mapCamera = [[mapView camera] copy];
 
-          MKMapCamera *mapCamera = [[mapView camera] copy];
-          [mapCamera setPitch:angle];
-          [mapCamera setHeading:bearing];
-          [AIRMap animateWithDuration:duration/1000 animations:^{
-          [(AIRMap *)view setRegion:region animated:YES];
-            [mapView setCamera:mapCamera animated:YES];
-          }];
+            CLLocationCoordinate2D coordinateAhead =
+            [self coordinateFromCoord:latlng
+                         atDistanceKm: 0.23
+                     atBearingDegrees: bearing];
+            //adjust distance (0.15 km) as needed
+
+            mapCamera.centerCoordinate = coordinateAhead;
+
+            mapCamera.heading = bearing;
+
+            mapCamera.pitch = angle; //adjust pitch as needed (0=look straight down)
+
+            mapCamera.altitude = [self getAltitudeFromMapZoom: altitudeMeters];
+
+            [AIRMap animateWithDuration:duration/1000 animations:^{
+                [mapView setCamera:mapCamera animated:YES];
+            }];
         }
     }];
 }
@@ -1058,6 +1068,16 @@ didChangeDragState:(MKAnnotationViewDragState)newState
     double zoomLevel = AIRMapMaxZoomLevel - zoomExponent;
 
     return zoomLevel;
+}
+
+-(double) getAltitudeFromMapZoom: (double) mapzoom {
+
+    double googleearthaltitude;
+    float firstPartOfEq= (float)(.05 * ((591657550.5/( pow(2,(mapzoom-1))))/2));//amount displayed is .05 meters and map scale =591657550.5/(Math.pow(2,(mapzoom-1))))
+    //this bit ^ essentially gets the h value in the angular size eq then divides it by 2
+    googleearthaltitude =(firstPartOfEq) * ((float) ( cos(DEGREES_TO_RADIANS(85.362/2)))/(float) ( sin( DEGREES_TO_RADIANS(85.362/2))));//85.362 is angle which google maps displays on a 5cm wide screen
+    return googleearthaltitude;
+
 }
 
 @end

@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static java.lang.Math.*;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
@@ -595,10 +596,10 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
 
-    map.setPadding(0, this.getHeight() / 2, 0, 0);
+    LatLng newLocation = computeOffset(coordinates, 0.23, 270);
 
     CameraPosition cameraPos = new CameraPosition.Builder()
-      .target(coordinates)
+      .target(newLocation)
       .zoom(altitude)
       .bearing(bearing)
       .tilt(angle)
@@ -873,4 +874,28 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     WritableMap event = makeClickEventData(coords);
     manager.pushEvent(context, this, "onPanDrag", event);
   }
+
+  /**
+     * Returns the LatLng resulting from moving a distance from an origin
+     * in the specified heading (expressed in degrees clockwise from north).
+     * @param from     The LatLng from which to start.
+     * @param distance The distance to travel.
+     * @param heading  The heading in degrees clockwise from north.
+     */
+    public LatLng computeOffset(LatLng from, double distance, double heading) {
+        distance /= 6371009; // EARTH_RADIUS
+        heading = toRadians(heading);
+        // http://williams.best.vwh.net/avform.htm#LL
+        double fromLat = toRadians(from.latitude);
+        double fromLng = toRadians(from.longitude);
+        double cosDistance = cos(distance);
+        double sinDistance = sin(distance);
+        double sinFromLat = sin(fromLat);
+        double cosFromLat = cos(fromLat);
+        double sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat * cos(heading);
+        double dLng = atan2(
+                sinDistance * cosFromLat * sin(heading),
+                cosDistance - sinFromLat * sinLat);
+        return new LatLng(toDegrees(asin(sinLat)), toDegrees(fromLng + dLng));
+    }
 }
