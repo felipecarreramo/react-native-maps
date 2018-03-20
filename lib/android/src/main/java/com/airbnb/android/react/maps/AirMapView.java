@@ -596,7 +596,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
   public void animateToView(LatLng coordinates, float altitude, float bearing, float angle, int duration) {
     if (map == null) return;
 
-    LatLng newLocation = computeOffset(coordinates, 0.23, 270);
+    LatLng newLocation = computeOffset(coordinates, 230, 270);
 
     CameraPosition cameraPos = new CameraPosition.Builder()
       .target(newLocation)
