@@ -214,6 +214,7 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
                   withAltitude:(double)altitudeMeters
                   withBearing:(CGFloat)bearing
                   withAngle:(double)angle
+                  withOffset:(double)offset
                   withDuration:(CGFloat)duration)
 {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
@@ -228,9 +229,8 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
             CLLocationCoordinate2D coordinateAhead =
             [self coordinateFromCoord:latlng
-                         atDistanceKm: 0.23
+                         atDistanceKm: offset / 1000
                      atBearingDegrees: bearing];
-            //adjust distance (0.15 km) as needed
 
             mapCamera.centerCoordinate = coordinateAhead;
 
@@ -240,7 +240,7 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
             mapCamera.altitude = [self getAltitudeFromMapZoom: altitudeMeters];
 
-            [AIRMap animateWithDuration:duration/1000 animations:^{
+            [AIRMap animateWithDuration: duration animations:^{
                 [mapView setCamera:mapCamera animated:YES];
             }];
         }
