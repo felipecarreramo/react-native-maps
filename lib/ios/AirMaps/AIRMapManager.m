@@ -240,7 +240,7 @@ RCT_EXPORT_METHOD(animateToView:(nonnull NSNumber *)reactTag
 
             mapCamera.altitude = [self getAltitudeFromMapZoom: altitudeMeters];
 
-            [AIRMap animateWithDuration: duration animations:^{
+            [AIRMap animateWithDuration: duration / 1000 animations:^{
                 [mapView setCamera:mapCamera animated:YES];
             }];
         }
