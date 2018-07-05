@@ -195,11 +195,12 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
         coordinate.putDouble("latitude", location.getLatitude());
         coordinate.putDouble("longitude", location.getLongitude());
         coordinate.putDouble("altitude", location.getAltitude());
+        coordinate.putDouble("timestamp", location.getTime());
         coordinate.putDouble("accuracy", location.getAccuracy());
         coordinate.putDouble("speed", location.getSpeed());
         if(android.os.Build.VERSION.SDK_INT >= 18){
         coordinate.putBoolean("isFromMockProvider", location.isFromMockProvider());
-        }         
+        }
 
         event.putMap("coordinate", coordinate);
 
@@ -610,6 +611,16 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
 
       boundsToMove = null;
     }
+  }
+
+  public void animateToNavigation(LatLng location, float bearing, float angle, int duration) {
+    if (map == null) return;
+    CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
+        .bearing(bearing)
+        .tilt(angle)
+        .target(location)
+        .build();
+    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), duration, null);
   }
 
   public void animateToRegion(LatLngBounds bounds, int duration) {
