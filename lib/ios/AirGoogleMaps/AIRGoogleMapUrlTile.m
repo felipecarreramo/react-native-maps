@@ -3,6 +3,8 @@
 //  Created by Nick Italiano on 11/5/16.
 //
 
+#ifdef HAVE_GOOGLE_MAPS
+
 #import "AIRGoogleMapUrlTile.h"
 
 @implementation AIRGoogleMapUrlTile
@@ -17,6 +19,7 @@
 {
   _urlTemplate = urlTemplate;
   _tileLayer = [GMSURLTileLayer tileLayerWithURLConstructor:[self _getTileURLConstructor]];
+  _tileLayer.tileSize = [[UIScreen mainScreen] scale] * 256;
 }
 
 - (GMSTileURLConstructor)_getTileURLConstructor
@@ -44,3 +47,5 @@
 }
 
 @end
+
+#endif
